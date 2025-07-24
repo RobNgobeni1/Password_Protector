@@ -1,125 +1,212 @@
-# Password Protector
+# PDF Encryption App
 
-A secure Python application for batch PDF encryption with automated file processing and password management.
+A simple desktop application that password-protects PDF files with an easy-to-use graphical interface.
 
-## 🔒 Overview
+## Features
 
-Password Protector is a desktop application that automatically encrypts PDF files with randomly generated passwords. Built with security best practices from banking industry experience, it provides a streamlined workflow for protecting sensitive documents.
+• **Batch Processing** - Encrypt multiple PDF files at once
+• **Custom Passwords** - Use your own password or generate secure random ones
+• **Automatic Organization** - Files are sorted into processed/unprocessed folders
+• **Password Logging** - CSV file tracks all passwords for easy reference
+• **User-Friendly GUI** - Simple step-by-step interface
 
-## ✨ Key Features
+## Screenshots
 
-• **Batch PDF Encryption** - Process multiple PDF files simultaneously
-• **Random Password Generation** - Creates secure passwords using cryptographic methods
-• **Automated File Organization** - Sorts files into processed/unprocessed folders
-• **Password Logging** - Maintains CSV records of all generated passwords
-• **User-Friendly GUI** - Simple Tkinter interface for easy operation
-• **Error Handling** - Robust exception management for reliable processing
+*Add screenshots of your app interface here*
 
-## 🛠️ Technologies Used
+## Installation
 
-• **Python 3.x** - Core programming language
-• **Tkinter** - GUI framework
-• **pikepdf** - PDF encryption library
-• **pandas** - Data processing and CSV generation
-• **pathlib** - Modern file path handling
-• **secrets** - Cryptographically secure random generation
-
-## 📁 Project Structure
+### Requirements
 
 ```
-Password_Protector/
-├── src/
-│   ├── main.py                 # Application entry point
-│   ├── config.py               # Configuration settings
-│   └── modules/
-│       ├── passwordApp.py      # GUI application logic
-│       ├── encrypt_file.py     # PDF encryption engine
-│       └── mkdir.py            # Directory management
-├── import_files/               # Files to be processed
-├── processed/                  # Successfully encrypted files
-├── not_processed/             # Unsupported or already encrypted files
-├── password_logs/             # Password records (CSV files)
-└── logs/                      # Application logs
+Python 3.7+
+tkinter (usually included with Python)
+pikepdf
+pandas
+pypdf
 ```
 
-## 🚀 Installation
+### Setup
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/RobNgobeni1/Password_Protector.git
-   cd Password_Protector
-   ```
+```bash
+git clone https://github.com/yourusername/pdf-encryption-app.git
+cd pdf-encryption-app
+```
 
-2. **Install required dependencies**
-   ```bash
-   pip install pikepdf pandas pathlib
-   ```
+2. **Install dependencies**
+```bash
+pip install pikepdf pandas pypdf
+```
 
 3. **Run the application**
-   ```bash
-   python src/main.py
+```bash
+python main.py
+```
+
+## How to Use
+
+### Step 1: Prepare Your Files
+• Place PDF files in the `/Import Files/To Be Processed/` folder
+• Only `.pdf` files are supported
+• Make sure files are not open in other applications
+
+### Step 2: Launch the App
+• Run `python main.py`
+• The app creates all necessary folders automatically
+
+### Step 3: Choose Password Option
+• **Custom Password**: Enter your own password when prompted
+• **Random Password**: Let the app generate a secure password
+
+### Step 4: Process Files
+• Click "Proceed" to start encryption
+• Wait for processing to complete
+
+### Step 5: Access Results
+• **Encrypted files**: Found in `/Import Files/Processed/[timestamp]/`
+• **Password log**: Saved in `/Import Files/Password File/[timestamp]/password_log.csv`
+• **Unsupported files**: Moved to `/Import Files/Not Processed/[timestamp]/`
+
+## Folder Structure
+
+```
+pdf-encryption-app/
+├── main.py                    # Main application entry point
+├── config.py                  # Configuration settings
+├── modules/
+│   ├── encrypt_file.py        # Core encryption logic
+│   ├── mkdir.py              # Folder creation utility
+│   └── passwordApp.py        # GUI application
+├── Import Files/
+│   ├── To Be Processed/      # Drop your PDF files here
+│   ├── Processed/            # Encrypted files output
+│   ├── Not Processed/        # Unsupported files
+│   └── Password File/        # Password logs (CSV format)
+└── Output Files/             # Additional output directory
+```
+
+## Technical Details
+
+### Security Features
+• **Random Password Generation**: 15-20 character passwords using letters, numbers, and special characters
+• **PDF Encryption**: Uses pikepdf library for robust PDF encryption
+• **Password Protection**: Both user and owner passwords set to the same value
+
+### File Processing
+• **Supported Format**: PDF files only
+• **File Extension**: Automatically converts extensions to lowercase
+• **Error Handling**: Already encrypted PDFs are moved to "Not Processed"
+• **Batch Processing**: Handles multiple files in one operation
+
+### GUI Framework
+• Built with tkinter for cross-platform compatibility
+• Responsive design with custom color scheme
+• Threading prevents GUI freezing during processing
+
+## Example Usage
+
+### Processing 3 PDF files with custom password:
+
+1. **Before**: Place files in `/Import Files/To Be Processed/`
+   ```
+   document1.pdf
+   report.pdf
+   presentation.pdf
    ```
 
-## 📖 How to Use
+2. **Run app**: Choose "Yes" for custom password, enter "MySecurePass123"
 
-1. **Place PDF files** in the `import_files` folder
-2. **Launch the application** using `python src/main.py`
-3. **Follow the GUI prompts** to start encryption
-4. **Check results** in organized output folders:
-   - `processed/` - Successfully encrypted PDFs
-   - `not_processed/` - Files that couldn't be processed
-   - `password_logs/` - CSV file with all passwords
+3. **After processing**:
+   ```
+   /Import Files/Processed/20250724_143022/
+   ├── document1 - encrypted.pdf
+   ├── report - encrypted.pdf
+   └── presentation - encrypted.pdf
+   
+   /Import Files/Password File/20250724_143022/password_log.csv
+   File Name,Password
+   document1.pdf,MySecurePass123
+   report.pdf,MySecurePass123
+   presentation.pdf,MySecurePass123
+   ```
 
-## 🔧 Configuration
+## Configuration
 
-The application uses a `config.py` file for customization:
+Edit `config.py` to customize:
 
-• **File Types** - Supported file extensions
-• **Password Length** - Range for generated passwords
-• **Folder Paths** - Directory structure settings
-• **GUI Settings** - Colors, fonts, and layout options
+• **File types**: Currently supports `.pdf` only
+• **Password length**: Random passwords are 15-20 characters
+• **GUI colors**: Background, frame, and text colors
+• **Font settings**: Font family and sizes
 
-## 🛡️ Security Features
+```python
+# Example customization
+FILE_TYPES = ['.pdf']  # Add more types if needed
+PASSWORD_LENGTH = (15, 16, 17, 18, 19, 20)  # Password length range
+BACKGROUND_COLOR = "#93C83E"  # Main background color
+```
 
-• **Cryptographic Password Generation** - Uses Python's `secrets` module
-• **Secure File Handling** - Proper cleanup of temporary files
-• **Password Logging** - Encrypted files tracked with corresponding passwords
-• **Error Isolation** - Failed encryptions don't affect other files
+## Troubleshooting
 
-## 💼 Real-World Application
+### Common Issues
 
-This project demonstrates enterprise-level security concepts:
+**"File already encrypted" error**
+• PDFs with existing passwords are moved to "Not Processed"
+• Remove existing password protection first
 
-• **Banking Industry Standards** - Applies data protection principles from financial services
-• **Automated Workflows** - Mirrors ETL processes used in data analysis
-• **Audit Trail** - Maintains logs similar to regulatory compliance systems
+**"Permission denied" error**  
+• Close PDF files in other applications
+• Check file/folder permissions
 
-## 🔍 Technical Highlights
+**"No files found" message**
+• Ensure files are in correct folder: `/Import Files/To Be Processed/`
+• Verify files have `.pdf` extension
 
-• **Object-Oriented Design** - Clean separation of concerns
-• **Exception Handling** - Comprehensive error management
-• **Modular Architecture** - Easy to extend and maintain
-• **Configuration-Driven** - Flexible settings management
+**App won't start**
+• Check Python version (3.7+ required)
+• Install missing dependencies: `pip install pikepdf pandas pypdf`
 
-## 🎯 Future Enhancements
+### File Locations
 
-• Support for additional file types (Word, Excel)
-• Database integration for password storage
-• Encryption strength options
-• Batch decryption functionality
-• Command-line interface
+All timestamped folders use format: `YYYYMMDD_HHMMSS`
 
-## 👨‍💻 About the Developer
+• Processed files: `/Import Files/Processed/[timestamp]/`
+• Password logs: `/Import Files/Password File/[timestamp]/password_log.csv`
+• Failed files: `/Import Files/Not Processed/[timestamp]/`
 
-Built by Robert Ngobeni, MIS Analyst with banking and payments industry experience. This project combines practical security knowledge from financial services with modern Python development practices.
+## Development
 
-## 🤝 Contributing
+### Project Structure
+• **main.py**: Entry point and folder initialization
+• **config.py**: All configuration constants
+• **encrypt_file.py**: Core encryption logic and file handling
+• **passwordApp.py**: GUI interface using tkinter
+• **mkdir.py**: Utility for folder creation
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for discussion.
+### Key Classes
+• `EncryptFile`: Handles PDF encryption and file management
+• `PasswordProtectApp`: Creates and manages GUI interface
+• `MakeFolder`: Utility for creating directory structure
 
-## 📄 License
+## Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit changes (`git commit -am 'Add new feature'`)
+4. Push to branch (`git push origin feature/new-feature`)
+5. Create Pull Request
+
+## Support
+
+For issues and questions:
+• Open an issue on GitHub
+• Check the troubleshooting section above
+• Review closed issues for similar problems
+
+---
+
+**Note**: This application is designed for legitimate document protection purposes. Users are responsible for compliance with local laws and regulations.
 
 ## 📞 Contact
 
