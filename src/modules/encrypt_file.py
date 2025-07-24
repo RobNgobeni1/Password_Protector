@@ -5,16 +5,12 @@ import datetime as dt
 import pikepdf, os, secrets, pypdf
 
 class EncryptFile():
-    def __init__(self):
+    def __init__(self, get_password):
+        self.get_password = get_password
         self.folder_path = Path(config.TO_BE_PROCESSED)
         self.Processed_folder = str(config.PROCESSED) + '/' + dt.datetime.now().strftime("%Y%m%d_%H%M%S") + '/' 
         self.Not_processed_folder = str(config.NOT_PROCESSED) + '/' + dt.datetime.now().strftime("%Y%m%d_%H%M%S") + '/' 
         self.Password_folder = str(config.PASSWORD_FOLDER) + '/' + dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-            # Create Folders
-        Path(self.Processed_folder).mkdir(parents=True)
-        Path(self.Not_processed_folder).mkdir(parents=True)
-        Path(self.Password_folder).mkdir(parents=True)
 
     def run_encryption(self):
         try:
@@ -78,7 +74,11 @@ class EncryptFile():
             self._remove_not_supported_files(not_supported_files)
             self._encrypt_files(supported_files)
 
-            return f"Encryption Done"
+            files = list()
+            files.append(len(supported_files))
+            files.append(len(not_supported_files))
+
+            return files
 
         except Exception as e:
             return f"Error: {e}"
@@ -89,6 +89,10 @@ class EncryptFile():
             for file in list_to_be_moved:
 
                 current_folder = str(file)
+
+                if not Path(self.Not_processed_folder).exists():
+                    Path(self.Not_processed_folder).mkdir(parents=True)
+                
                 new_folder = str(self.Not_processed_folder) +  '/' + str(Path(file).name)
 
                 shutil.move(current_folder, new_folder) 
@@ -102,8 +106,17 @@ class EncryptFile():
         encrypt = list(encrypt_file_list)
 
         for file in encrypt:
-            random_password = self._generate_random_password()
-            password_log.append((Path(file).name, random_password))
+
+            check_password = self.get_password.lstrip().rstrip()
+            random_password = ''
+            
+            if check_password == "":
+                random_password = self._generate_random_password()
+                password_log.append((Path(file).name, random_password))
+
+            else:
+                random_password = check_password
+                password_log.append((Path(file).name, random_password))
 
                 #Encrypt Files
             # Add other Files Types
@@ -122,11 +135,15 @@ class EncryptFile():
                 return f"Error: {e}."
                 
         try:
-            password_df = pd.DataFrame(password_log, columns=['File Name', 'Password'])
-            csv_filename = f"{self.Password_folder}/password_log.csv"
-            password_df.to_csv(csv_filename, index=False)
+            if len(password_log) != 0:
+                if not Path(self.Password_folder).exists():
+                    Path(self.Password_folder).mkdir(parents=True)
+                
+                password_df = pd.DataFrame(password_log, columns=['File Name', 'Password'])
+                csv_filename = f"{self.Password_folder}/password_log.csv"
+                password_df.to_csv(csv_filename, index=False)
 
-            return "Password File saved."
+                return "Password File saved."
 
         except Exception as e:
             return f"Error: {e}"
@@ -155,9 +172,13 @@ class EncryptFile():
         try:
             filePath = Path(file_path)
             current_folder = str(filePath)
+            
+            if not Path(self.Processed_folder).exists():
+                Path(self.Processed_folder).mkdir(parents=True)
+
             new_folder_done = str(self.Processed_folder) +  '/' + str(Path(filePath).name)
 
-            shutil.move(current_folder, new_folder_done) 
+            shutil.move(current_folder, new_folder_done)
         
         except Exception as e:
             return f"Error: {e}"
@@ -172,4 +193,3 @@ class EncryptFile():
         
         except Exception as e:
             return f"Error: {e}"
-
