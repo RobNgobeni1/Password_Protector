@@ -40,7 +40,7 @@ FONT_SIZE_TITLE = 25
 FONT_SIZE_HEADING = 18
 FONT_SIZE_BODY = 15
 
-file_list = str(FILE_TYPES).replace('[\'','').replace('\']','').replace('\'','')
+file_list = ''.join(FILE_TYPES)
 
     # APP INSTRUCTORS 
 APP_DIRECTIONS_HEADING = """
@@ -83,25 +83,13 @@ PLEASE_WAIT_HEADER = "\nPROCESSING...\n"
 PLEASE_WAIT_BODY = f"""
 *{x}
 
+    😊😊....Please Wait...😊😊 
+
     ....Processing...
+    
 
 *{x}
 """
-
 
     # ENCRYPTION DONE
 ENCRYPTION_DONE_HEADER = "\n ENCRYPTION COMPLETE.\n"
-
-ENCRYPTION_DONE_BODY = f"""
-*{x}
-
-    1 - Please Check Encrypted File(s) in folder - '/Import Files/Processed'. 
-
-    2 - Password File will be found in the folder - '/Import Files/Password File'. 
-
-    3 - All unsupported files are found in the folder - '/Import Files/Not Processed'.
-    
-    😊😊Have a Nice Day.😊😊 
-
-*{x}
-"""
